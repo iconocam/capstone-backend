@@ -58,4 +58,25 @@ try{
     }
 }
 
-module.exports = {index, create, destroy}
+// PATCH/UPDATE route
+// querying database to findByIdAndUpdate whatever is in the req.body and req.params.id that was specified, runValidators compares our schema against the newPersonality 
+// if personality was not updated 404 error, otherwise send updatedPersonality 
+async function update(req, res) {
+    try {
+    const updatedPersonality = await Personality.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { runValidators: true }
+    );
+
+    if (!updatedPersonality) {
+        res.status(404).json({ message: 'Personality Not Found' });
+    }
+
+    res.status(200).send(updatedPersonality);
+    } catch (err) {
+    res.status(400).json({ error: 'Bad Request', message: err.message });
+    }
+}
+
+module.exports = {index, create, destroy, update }
