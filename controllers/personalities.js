@@ -1,0 +1,61 @@
+// Need the model to interact with the database, 
+// Bringing the model from models file 
+const Personality = require('../models/Personality')
+
+// index route
+// Async operations pertaining to our DB and inside this controller is where we insert the request, and response 
+
+// async func. for index operation finding personalities and if personalities is found send personalities with a 200 response or send 400 response and err
+
+// refactored to personalities.length > 0 to check if the documents are greather than zero and if it is not greater it returns 'No personalities found' as oppose to the find method returning an empty array irregardless of how many documents there are
+
+// logic for getting personalities
+// For Async processes best practice is to try/catch
+
+async function index (req, res) {
+try{
+    const personalities = await Personality.find({})
+    if (personalities.length > 0) {
+        res.status(200).send(personalities);
+    } else {
+        res.status(404).send({ message: 'No personalities found.' });}
+    } catch (err) {
+        res.status(400).json({err: 'Bad Request', message: err.message})
+    }
+}
+
+// create route
+// logic for POST method
+// getting the body of req object, if personality is created return otherwise error
+// changed to newPersonality for accuracy
+
+async function create (req, res) {
+try{
+    const newPersonality = await Personality.create(req.body)
+    if (newPersonality) {
+        res.status(201).send(newPersonality)}
+    } catch(err){
+    res.status(400).json({err: 'Bad Request', message: err.message})
+    }
+}
+
+// Delete route
+// logic for DELETE method
+// deletedPersonality var , querying our database to findByIdAndDelete from the req input, and if personality deleted, send it back
+
+//instead of using findByIdAndDelete, refactored to findById so we can retrieve the personality before attempting deletion.
+    async function destroy(req, res) {
+    try {
+        const personality = await Personality.findById(req.params.id);
+
+    if (!personality) {
+        return res.status(404).json({ message: 'Personality not found.' });
+    }
+        const deletedPersonality = await personality.delete();
+    res.status(200).send(deletedPersonality);
+    } catch (err) {
+    res.status(400).json({ error: 'Bad Request', message: err.message });
+    }
+}
+
+module.exports = {index, create, destroy}

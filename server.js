@@ -7,10 +7,15 @@ const app = express()
 // Port in which the server will run on 
 const PORT = process.env.PORT || 8000
 
-
+const personalityRouter = require('./routes/personalities')
 // Configuring the server to accept and parse JSON data.
+
 app.use(express.json())
 
+// Routes;
+
+// /personalities
+app.use("/personalities", personalityRouter)
 
 
 
