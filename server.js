@@ -6,13 +6,16 @@ const express = require('express')
 const app = express()
 // Port in which the server will run on 
 const PORT = process.env.PORT || 8000
-
+// const cors = require('cors')
 const personalityRouter = require('./routes/personalities')
 // Configuring the server to accept and parse JSON data.
 
 app.use(express.json())
+// app.use(cors());
+
 
 // Routes;
+// http://localhost:8000/personalities
 
 // /personalities
 app.use("/personalities", personalityRouter)
