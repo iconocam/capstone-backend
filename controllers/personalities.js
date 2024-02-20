@@ -1,6 +1,6 @@
 // Need the model to interact with the database, 
 // Bringing the model from models file 
-const Personality = require('../models/Personality')
+const {Personality, INFJ} = require('../models/Personality')
 
 // index route
 // Async operations pertaining to our DB and inside this controller is where we insert the request, and response 
@@ -79,4 +79,66 @@ async function update(req, res) {
     }
 }
 
-module.exports = {index, create, destroy, update }
+
+// INFJ Collection CRUD operations
+
+
+async function infjIndex(req, res) {
+    try {
+    const infjs = await INFJ.find({});
+    console.log(infjs)
+    // if (infjs.length > 0) {
+        res.status(200).json(infjs); //ensure JSON response
+    // } else {
+    //     res.status(404).json({ message: 'No INFJs found.' });
+    // }
+    } catch (err) {
+    res.status(400).json({ err: 'Bad Request', message: err.message });
+    }
+}
+
+async function infjCreate(req, res) {
+    try {
+    const newINFJ = await INFJ.create(req.body);
+    if (newINFJ) {
+        res.status(201).json(newINFJ);
+    }
+    } catch (err) {
+    res.status(400).json({ err: 'Bad Request', message: err.message });
+    }
+}
+
+
+async function infjDestroy(req, res) {
+    try {
+    const infj = await INFJ.findById(req.params.id);
+
+    if (!infj) {
+        return res.status(404).json({ message: 'INFJ not found.' });
+    }
+
+    const deletedINFJ = await infj.delete();
+    res.status(200).json(deletedINFJ);
+    } catch (err) {
+    res.status(400).json({ error: 'Bad Request', message: err.message });
+    }
+}
+
+async function infjUpdate(req, res) {
+    try {
+    const updatedINFJ = await INFJ.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { runValidators: true }
+    );
+
+    if (!updatedINFJ) {
+        res.status(404).json({ message: 'INFJ Not Found' });
+    }
+
+    res.status(200).json(updatedINFJ);
+    } catch (err) {
+    res.status(400).json({ error: 'Bad Request', message: err.message });
+    }
+}
+module.exports = {index, create, destroy, update, infjIndex, infjCreate, infjDestroy, infjUpdate }

@@ -5,16 +5,16 @@ const personalitySchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        
     },
     description: {
         type: String,
-        required: true,
+        
     },
     link: {
         type: String,
         required: true,
-        unique: true
+        
     },
     
 
@@ -24,4 +24,23 @@ const personalitySchema = new Schema({
 
 )
 
-module.exports = model("Personality", personalitySchema)
+
+const infjSchema = new Schema({
+    Type: {
+        type: String,
+        required: true
+    },
+    Source: {
+        type: String,
+        required: true
+    },
+    
+    
+
+}, 
+)
+
+module.exports = {
+    Personality: model("Personality", personalitySchema),
+    INFJ: model("INFJ", infjSchema)
+}
